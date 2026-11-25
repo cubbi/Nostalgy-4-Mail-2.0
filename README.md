@@ -134,11 +134,6 @@ Version 2.0 is a small menu-bar app that drives Mail through AppleScript instead
 The zip has the same name in every release, so the download link,
 `releases/latest/download/Nostalgy-4-Mail.zip`, always gets the newest version.
 
-### Website
-
-The website is in `docs/`. Publish it with GitHub Pages: Settings › Pages › Deploy from a branch,
-`main`, folder `/docs`. It then lives at https://cubbi.github.io/Nostalgy-4-Mail-2.0/.
-
 ## License
 
 MIT. See [LICENSE](LICENSE).
