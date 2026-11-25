@@ -1,5 +1,7 @@
-// Renders tools/demo/scene.html into build/demo/demo-light.gif and build/demo/demo-dark.gif.
-// Copy them to the docs branch (the website) to publish them.
+// Renders tools/demo/scene.html into build/demo/:
+//   demo-light.gif, demo-dark.gif      for the website (its own page background)
+//   readme-light.gif, readme-dark.gif  for the README (GitHub's white and dark page backgrounds)
+// Copy them to the docs branch to publish them.
 //
 // Usage, from the project folder (needs ImageMagick, e.g. brew install imagemagick):
 //   swiftc -o /tmp/render-demo tools/demo/render.swift && /tmp/render-demo
@@ -14,15 +16,17 @@ let scene = project.appendingPathComponent("tools/demo/scene.html")
 
 final class Renderer: NSObject, WKNavigationDelegate {
     let web: WKWebView
-    let mode: String
+    let name: String
+    let page: String?         // page background; nil keeps the scene's own
     let frames: URL
     let done: () -> Void
     var frame = 0
 
-    init(mode: String, done: @escaping () -> Void) {
-        self.mode = mode
+    init(name: String, mode: String, page: String?, done: @escaping () -> Void) {
+        self.name = name
+        self.page = page
         self.done = done
-        frames = FileManager.default.temporaryDirectory.appendingPathComponent("nostalgy-demo-\(mode)")
+        frames = FileManager.default.temporaryDirectory.appendingPathComponent("nostalgy-\(name)")
         try? FileManager.default.removeItem(at: frames)
         try! FileManager.default.createDirectory(at: frames, withIntermediateDirectories: true)
         web = WKWebView(frame: NSRect(origin: .zero, size: size))
@@ -34,7 +38,10 @@ final class Renderer: NSObject, WKNavigationDelegate {
         web.loadFileURL(scene, allowingReadAccessTo: scene.deletingLastPathComponent())
     }
 
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) { next() }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard let page else { next(); return }
+        web.evaluateJavaScript("document.documentElement.style.setProperty('--page', '\(page)')") { _, _ in self.next() }
+    }
 
     private func next() {
         let total = Int(length * fps)
@@ -59,7 +66,7 @@ final class Renderer: NSObject, WKNavigationDelegate {
     private func encode() {
         let outDir = project.appendingPathComponent("build/demo")
         try! FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
-        let out = outDir.appendingPathComponent("demo-\(mode).gif").path
+        let out = outDir.appendingPathComponent("\(name).gif").path
         let input = frames.appendingPathComponent("f*.png").path
         let palette = frames.appendingPathComponent("palette.png").path
         // One palette for the whole animation, then each frame stores only the area that changed.
@@ -83,9 +90,13 @@ final class Renderer: NSObject, WKNavigationDelegate {
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
 var renderers: [Renderer] = []
-var remaining = 2
-for mode in ["light", "dark"] {
-    renderers.append(Renderer(mode: mode) {
+let variants: [(name: String, mode: String, page: String?)] = [
+    ("demo-light", "light", nil), ("demo-dark", "dark", nil),
+    ("readme-light", "light", "#ffffff"), ("readme-dark", "dark", "#0d1117"), // GitHub's page colours
+]
+var remaining = variants.count
+for v in variants {
+    renderers.append(Renderer(name: v.name, mode: v.mode, page: v.page) {
         remaining -= 1
         if remaining == 0 { exit(0) }
     })
