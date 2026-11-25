@@ -18,13 +18,15 @@ final class Renderer: NSObject, WKNavigationDelegate {
     let web: WKWebView
     let name: String
     let page: String?         // page background; nil keeps the scene's own
+    let css: String?          // extra CSS for this variant
     let frames: URL
     let done: () -> Void
     var frame = 0
 
-    init(name: String, mode: String, page: String?, done: @escaping () -> Void) {
+    init(name: String, mode: String, page: String?, css: String?, done: @escaping () -> Void) {
         self.name = name
         self.page = page
+        self.css = css
         self.done = done
         frames = FileManager.default.temporaryDirectory.appendingPathComponent("nostalgy-\(name)")
         try? FileManager.default.removeItem(at: frames)
@@ -39,8 +41,14 @@ final class Renderer: NSObject, WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        guard let page else { next(); return }
-        web.evaluateJavaScript("document.documentElement.style.setProperty('--page', '\(page)')") { _, _ in self.next() }
+        var js = ""
+        if let page { js += "document.documentElement.style.setProperty('--page', '\(page)');" }
+        if let css { js += "const s = document.createElement('style'); s.textContent = '\(css)'; document.head.append(s);" }
+        guard !js.isEmpty else { next(); return }
+        web.evaluateJavaScript(js) { _, error in
+            if let error { fatalError("variant setup: \(error)") }
+            self.next()
+        }
     }
 
     private func next() {
@@ -90,13 +98,16 @@ final class Renderer: NSObject, WKNavigationDelegate {
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
 var renderers: [Renderer] = []
-let variants: [(name: String, mode: String, page: String?)] = [
-    ("demo-light", "light", nil), ("demo-dark", "dark", nil),
-    ("readme-light", "light", "#ffffff"), ("readme-dark", "dark", "#0d1117"), // GitHub's page colours
+// README versions sit on GitHub's page colours, with a thin outline instead of the window's soft
+// shadow, which would show as a grey halo around the window on GitHub's page.
+let variants: [(name: String, mode: String, page: String?, css: String?)] = [
+    ("demo-light", "light", nil, nil), ("demo-dark", "dark", nil, nil),
+    ("readme-light", "light", "#ffffff", ".win { box-shadow: 0 0 0 1px rgba(0,0,0,0.14); } .key { box-shadow: 0 2px 6px rgba(0,0,0,0.2); }"),
+    ("readme-dark", "dark", "#0d1117", ".win { box-shadow: 0 0 0 1px rgba(255,255,255,0.16); } .key { box-shadow: 0 2px 6px rgba(0,0,0,0.4); }"),
 ]
 var remaining = variants.count
 for v in variants {
-    renderers.append(Renderer(name: v.name, mode: v.mode, page: v.page) {
+    renderers.append(Renderer(name: v.name, mode: v.mode, page: v.page, css: v.css) {
         remaining -= 1
         if remaining == 0 { exit(0) }
     })
