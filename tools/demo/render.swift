@@ -1,4 +1,5 @@
-// Renders tools/demo/scene.html into docs/demo-light.gif and docs/demo-dark.gif.
+// Renders tools/demo/scene.html into build/demo/demo-light.gif and build/demo/demo-dark.gif.
+// Copy them to the docs branch (the website) to publish them.
 //
 // Usage, from the project folder (needs ImageMagick, e.g. brew install imagemagick):
 //   swiftc -o /tmp/render-demo tools/demo/render.swift && /tmp/render-demo
@@ -56,7 +57,9 @@ final class Renderer: NSObject, WKNavigationDelegate {
     }
 
     private func encode() {
-        let out = project.appendingPathComponent("docs/demo-\(mode).gif").path
+        let outDir = project.appendingPathComponent("build/demo")
+        try! FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
+        let out = outDir.appendingPathComponent("demo-\(mode).gif").path
         let input = frames.appendingPathComponent("f*.png").path
         let palette = frames.appendingPathComponent("palette.png").path
         // One palette for the whole animation, then each frame stores only the area that changed.

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon-rounded.png" width="96" height="96" alt="Nostalgy-4-Mail app icon">
+  <img src="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/icon-rounded.png" width="96" height="96" alt="Nostalgy-4-Mail app icon">
 </p>
 
 <h1 align="center">Nostalgy-4-Mail 2.0</h1>
@@ -24,8 +24,8 @@
 
 <p align="center">
   <picture>
-    <source srcset="docs/demo-dark.gif" media="(prefers-color-scheme: dark)">
-    <img src="docs/demo-light.gif" width="680" alt="Nostalgy-4-Mail in Apple Mail: Control-S opens the folder picker over Mail, typing 'acm' finds Work / Clients / Acme, Return files the invoice and the next message is selected; then Control-Shift-S files that one to the same folder.">
+    <source srcset="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/demo-dark.gif" media="(prefers-color-scheme: dark)">
+    <img src="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/demo-light.gif" width="680" alt="Nostalgy-4-Mail in Apple Mail: Control-S opens the folder picker over Mail, typing 'acm' finds Work / Clients / Acme, Return files the invoice and the next message is selected; then Control-Shift-S files that one to the same folder.">
   </picture>
   <br>
   <sub><kbd>⌃S</kbd>, type “acm”, <kbd>↩</kbd>. Then <kbd>⌃⇧S</kbd> files the next one to the same folder.</sub>
@@ -121,8 +121,8 @@ Version 2.0 is a small menu-bar app that drives Mail through AppleScript instead
 | `release.sh` | Builds and zips a release; `--publish` creates the GitHub release |
 | `Resources/` | App icon: the approved artwork and the generated icon set |
 | `tools/make-icon.swift` | Regenerates the icon set from the artwork |
-| `docs/` | The website, published with GitHub Pages |
 | `tools/demo/` | The animated demo: `scene.html` and `render.swift`, which turns it into the GIFs |
+| `docs` branch | The website, published with GitHub Pages; also holds the README's images |
 
 ### Making a release
 
