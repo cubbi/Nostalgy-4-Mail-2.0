@@ -27,8 +27,8 @@
 
 <p align="center">
   <picture>
-    <source srcset="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/readme-dark.gif" media="(prefers-color-scheme: dark)">
-    <img src="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/readme-light.gif" width="680" alt="Nostalgy-4-Mail in Apple Mail: Control-S opens the folder picker over Mail, typing 'acm' finds Work / Clients / Acme, Return files the invoice and the next message is selected; then Control-Shift-S files that one to the same folder.">
+    <source srcset="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/readme-dark.gif?v=2" media="(prefers-color-scheme: dark)">
+    <img src="https://raw.githubusercontent.com/cubbi/Nostalgy-4-Mail-2.0/docs/readme-light.gif?v=2" width="680" alt="Nostalgy-4-Mail in Apple Mail: Control-S opens the folder picker over Mail, typing 'acm' finds Work / Clients / Acme, Return files the invoice and the next message is selected; then Control-Shift-S files that one to the same folder.">
   </picture>
   <br>
   <sub><kbd>⌃S</kbd>, type “acm”, <kbd>↩</kbd>. Then <kbd>⌃⇧S</kbd> files the next one to the same folder.</sub>
