@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon.png" width="96" height="96" alt="Nostalgy-4-Mail app icon">
+  <img src="docs/icon-rounded.png" width="96" height="96" alt="Nostalgy-4-Mail app icon">
 </p>
 
 <h1 align="center">Nostalgy-4-Mail 2.0</h1>
